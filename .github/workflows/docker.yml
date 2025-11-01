@@ -118,7 +118,7 @@ jobs:
           build-args: |
             CACHE_BUST=${{ github.run_id }}-${{ needs.git.outputs.timestamp }}
           context: "{{defaultContext}}:docker"
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && 'true' }}
           platforms: ${{ matrix.platform }}
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
