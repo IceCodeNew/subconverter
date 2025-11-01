@@ -8,6 +8,7 @@ on:
     paths:
     - '.github/workflows/docker.yml'
     - 'docker/**'
+  pull_request: {}
   workflow_dispatch:
 
 env:
@@ -98,13 +99,14 @@ jobs:
             src_libcron=./src/libcron/
             src_subconverter=./src/subconverter/
           context: "{{defaultContext}}:docker"
-          push: true
+          push: ${{ github.event_name == 'pull_request' && false || true }}
           platforms: ${{ matrix.platform }}
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
           outputs: type=image,compression=estargz,force-compression=true,oci-mediatypes=true,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       -
         name: Export digest
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         env:
           digest: ${{ steps.build.outputs.digest }}
           platform: ${{ matrix.platform }}
@@ -114,6 +116,7 @@ jobs:
           echo "PLATFORM_PAIR=${platform//\//-}" >> "$GITHUB_ENV"
       -
         name: Upload digest
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: subconverter-digests-${{ env.PLATFORM_PAIR }}
@@ -123,6 +126,7 @@ jobs:
 
   subconverter-multiarch:
     runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     needs:
       - subconverter
     steps:
