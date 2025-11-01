@@ -44,7 +44,8 @@ COPY --link --from=quickjspp /emptydir/ /
 COPY --link --from=libcron   /emptydir/ /
 COPY --link --from=src_subconverter   / /subconverter/
 WORKDIR /subconverter/
-RUN cmake -DCMAKE_BUILD_TYPE=Release . && \
+RUN rm -f include/quickjspp.hpp && \
+    cmake -DCMAKE_BUILD_TYPE=Release . && \
     make -j 4
 
 
