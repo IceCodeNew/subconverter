@@ -50,6 +50,7 @@ jobs:
         shell: bash
         run: |
             cd ./src/subconverter/ || exit 1
+            git remote remove upstream || true
             git remote add upstream https://github.com/tindy2013/subconverter.git
             git fetch --all --prune --prune-tags
             git pull --rebase upstream master || exit 1
