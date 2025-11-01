@@ -46,7 +46,8 @@ COPY --link --from=src_subconverter   / /subconverter/
 WORKDIR /subconverter/
 RUN rm -f include/quickjspp.hpp && \
     cmake -DCMAKE_BUILD_TYPE=Release . && \
-    make -j 4
+    make -j 4 && \
+    /subconverter/subconverter --gen || exit 1
 
 
 FROM mirror.gcr.io/library/alpine:3.22 AS final
