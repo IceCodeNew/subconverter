@@ -16,35 +16,35 @@ RUN apk update && \
     rm -rf /var/cache/apk/*
 
 FROM build-base AS quickjspp
+COPY --link --from=src_quickjspp / /quickjspp/
 WORKDIR /quickjspp/
-RUN --mount=type=bind,from=src_quickjspp,source=./,target=/quickjspp/ \
-    cmake -DCMAKE_BUILD_TYPE=Release . && \
+RUN cmake -DCMAKE_BUILD_TYPE=Release . && \
     make quickjs -j 2 && \
-    install -m644 -pvD \
-        quickjs/libquickjs.a /emptydir/usr/lib/quickjs/ && \
-    install -m644 -pvD \
-        quickjs/quickjs.h quickjs/quickjs-libc.h /emptydir/usr/include/quickjs/ && \
-    install -m644 -pvD \
-        quickjspp.hpp /emptydir/usr/include/
+    install -m644 -pvD -t /emptydir/usr/lib/quickjs/ \
+        quickjs/libquickjs.a && \
+    install -m644 -pvD -t /emptydir/usr/include/quickjs/ \
+        quickjs/quickjs.h quickjs/quickjs-libc.h && \
+    install -m644 -pvD -t /emptydir/usr/include/ \
+        quickjspp.hpp
 
 FROM build-base AS libcron
+COPY --link --from=src_libcron / /libcron/
 WORKDIR /libcron/
-RUN --mount=type=bind,from=src_libcron,source=./,target=/libcron/ \
-    cmake -DCMAKE_BUILD_TYPE=Release . && \
+RUN cmake -DCMAKE_BUILD_TYPE=Release . && \
     make libcron -j 2 && \
-    install -m644 -pvD \
-        libcron/out/Release/liblibcron.a /emptydir/usr/lib/ && \
-    install -m644 -pvD \
-        libcron/include/libcron/* /emptydir/usr/include/libcron/ && \
-    install -m644 -pvD \
-        libcron/externals/date/include/date/* /emptydir/usr/include/date/
+    install -m644 -pvD -t /emptydir/usr/lib/ \
+        libcron/out/Release/liblibcron.a && \
+    install -m644 -pvD -t /emptydir/usr/include/libcron/ \
+        libcron/include/libcron/* && \
+    install -m644 -pvD -t /emptydir/usr/include/date/ \
+        libcron/externals/date/include/date/*
 
 FROM build-base AS subconverter-builder
 COPY --link --from=quickjspp /emptydir/ /
 COPY --link --from=libcron   /emptydir/ /
+COPY --link --from=src_subconverter   / /subconverter/
 WORKDIR /subconverter/
-RUN --mount=type=bind,from=src_subconverter,source=./,target=/subconverter/ \
-    cmake -DCMAKE_BUILD_TYPE=Release . && \
+RUN cmake -DCMAKE_BUILD_TYPE=Release . && \
     make -j 4
 
 
