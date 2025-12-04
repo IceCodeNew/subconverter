@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM mirror.gcr.io/library/alpine:3.22 AS build-base
+FROM mirror.gcr.io/library/alpine:3.23 AS build-base
 # ENV RUNNER_THREADS="4"
 RUN apk update && \
     apk add --no-cache \
@@ -61,7 +61,7 @@ RUN echo "Cache bust: ${CACHE_BUST}" > /cache_bust.txt; \
     fi
 
 
-FROM mirror.gcr.io/library/alpine:3.22 AS final
+FROM mirror.gcr.io/library/alpine:3.23 AS final
 LABEL maintainer="IceCodeNew"
 RUN apk update && \
     apk add --no-cache \
