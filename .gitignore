@@ -6,3 +6,5 @@ base/cache
 build
 .xmake
 build
+
+.commandcode
