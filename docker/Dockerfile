@@ -48,9 +48,7 @@ RUN rm -f include/quickjspp.hpp && \
     cmake -DCMAKE_BUILD_TYPE=Release . && \
     mold -run make -j 4
 
-ARG CACHE_BUST
-RUN echo "Cache bust: ${CACHE_BUST}" > /cache_bust.txt; \
-    readelf -p .comment /subconverter/subconverter; \
+RUN readelf -p .comment /subconverter/subconverter; \
     timeout 3s /subconverter/subconverter; \
     smoke_test=$? && \
     if [[ "${smoke_test}" -eq 0 ]] || [[ "${smoke_test}" -eq 124 ]]; then \
