@@ -1,6 +1,6 @@
-# syntax=docker/dockerfile:1
+# syntax=mirror.gcr.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
 
-FROM mirror.gcr.io/library/alpine:3.22 AS build-base
+FROM mirror.gcr.io/library/alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce AS build-base
 # ENV RUNNER_THREADS="4"
 RUN apk update && \
     apk add --no-cache \
@@ -59,7 +59,7 @@ RUN readelf -p .comment /subconverter/subconverter; \
     fi
 
 
-FROM mirror.gcr.io/library/alpine:3.22 AS final
+FROM mirror.gcr.io/library/alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce AS final
 LABEL maintainer="IceCodeNew"
 RUN apk update && \
     apk add --no-cache \
