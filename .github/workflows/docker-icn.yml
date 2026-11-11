@@ -134,7 +134,7 @@ jobs:
           retention-days: 1
 
   subconverter-multiarch:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - subconverter
     steps:
